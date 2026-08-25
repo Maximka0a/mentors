@@ -13,7 +13,9 @@ interface ParsedCategory {
 }
 
 const TOP_LEVEL_RE = /^(.+):\s*Вопросы на собесе\s*\((\d+)\)$/u;
-const HEADER_RE = /^(.+?)\s*\((\d+)\)$/u;
+// Requires a space before "(N)" so code like "delay(1000)" doesn't match, and caps N
+// so large numeric literals in code snippets (e.g. Thread.sleep(999)) are rejected.
+const HEADER_RE = /^(.+?)\s+\((\d{1,3})\)$/u;
 
 function parse(lines: string[]): ParsedCategory[] {
   const categories: ParsedCategory[] = [];
@@ -39,7 +41,10 @@ function parse(lines: string[]): ParsedCategory[] {
     if (topMatch) {
       flushQuestion();
       topLevelName = topMatch[1].trim();
-      currentCategory = null;
+      // Start a flat category right away in case this category has no subcategory
+      // groupings and questions appear directly under the top-level header.
+      currentCategory = { name: topLevelName, declaredCount: Number(topMatch[2]), questions: [] };
+      categories.push(currentCategory);
       continue;
     }
 

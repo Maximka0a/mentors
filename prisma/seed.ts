@@ -18,8 +18,7 @@ interface SeedCategory {
 function slugify(name: string): string {
   return name
     .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^\w\s>-]/g, "")
+    .replace(/[^\p{L}\p{N}\s>-]/gu, "")
     .trim()
     .replace(/\s*>\s*/g, "--")
     .replace(/\s+/g, "-");
