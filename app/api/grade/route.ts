@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export const maxDuration = 60;
 export const runtime = "nodejs";
 
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-3.6-flash";
 
 export async function POST(req: NextRequest) {
   const { questionId, userAnswer } = await req.json();
