@@ -35,14 +35,15 @@ export async function resolveModels(): Promise<string[]> {
       });
       if (res.ok) {
         const data: { models?: { name: string; supportedGenerationMethods?: string[] }[] } = await res.json();
+        // Stable flash models first (newest first), then stable flash-lite as a lighter fallback
         names = (data.models ?? [])
           .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
           .map((m) => {
-            const match = /^models\/(gemini-(\d+(?:\.\d+)?)-flash)$/.exec(m.name);
-            return match ? { name: match[1], version: Number(match[2]) } : null;
+            const match = /^models\/(gemini-(\d+(?:\.\d+)?)-flash(-lite)?)$/.exec(m.name);
+            return match ? { name: match[1], version: Number(match[2]), lite: !!match[3] } : null;
           })
-          .filter((m): m is { name: string; version: number } => m !== null)
-          .sort((a, b) => b.version - a.version)
+          .filter((m): m is { name: string; version: number; lite: boolean } => m !== null)
+          .sort((a, b) => Number(a.lite) - Number(b.lite) || b.version - a.version)
           .map((m) => m.name);
       }
     } catch (e) {
@@ -86,6 +87,7 @@ export async function generateJson<T>(opts: {
         return { value, model };
       } catch (e) {
         lastError = e instanceof GeminiError ? e : new GeminiError("http", String(e));
+        console.warn(`gemini ${model} attempt ${attempt + 1}: ${lastError.code} ${lastError.status ?? ""}`);
         if (["no_key", "rate_limit", "blocked"].includes(lastError.code)) throw lastError;
         if (lastError.status === 503 || lastError.status === 404) break; // try the next model
         if (lastError.status && lastError.status >= 500) await sleep(1000 * (attempt + 1));

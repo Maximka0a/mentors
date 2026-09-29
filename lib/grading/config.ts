@@ -18,8 +18,8 @@ export const GRADING_CONFIG = {
   // Whole grading request must fit Vercel's 60s function limit
   totalBudgetMs: 50_000,
   retries: 1,
-  // On overload, fall back to up to this many newest stable flash models
-  maxModelsToTry: 2,
+  // On overload, fall back through this many models (stable flash newest-first, then flash-lite)
+  maxModelsToTry: 3,
   temperature: 0.2,
   // Used only if model discovery via models.list fails and GEMINI_MODEL is unset
   fallbackModel: "gemini-3.6-flash",
