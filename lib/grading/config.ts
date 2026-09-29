@@ -15,7 +15,11 @@ export const GRADING_CONFIG = {
   // A single factual error caps the verdict: an answer with wrong facts can't be 🟢
   maxVerdictWithFactualErrors: "yellow" as Verdict,
   requestTimeoutMs: 25_000,
+  // Whole grading request must fit Vercel's 60s function limit
+  totalBudgetMs: 50_000,
   retries: 1,
+  // On overload, fall back to up to this many newest stable flash models
+  maxModelsToTry: 2,
   temperature: 0.2,
   // Used only if model discovery via models.list fails and GEMINI_MODEL is unset
   fallbackModel: "gemini-3.6-flash",
