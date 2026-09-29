@@ -1,33 +1,47 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Onest, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { NavBar } from "./nav-bar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const onest = Onest({
+  variable: "--font-onest",
+  subsets: ["latin", "cyrillic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin", "cyrillic"],
 });
 
 export const metadata: Metadata = {
   title: "Mentors Club",
-  description: "Тренажёр вопросов с собеседований",
+  description: "Тренажёр вопросов с собеседований Android/Kotlin",
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1013" },
+  ],
+};
+
+// Applied before paint so a stored theme choice doesn't flash the other theme
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#0b0b12] text-white">
-        <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1a1030] via-[#0b0b12] to-[#0b1a2a]" />
-        <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(139,92,246,0.18),transparent_45%),radial-gradient(circle_at_80%_100%,rgba(56,189,248,0.14),transparent_45%)]" />
+    <html lang="ru" suppressHydrationWarning className={`${onest.variable} ${jetbrains.variable} h-full antialiased`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="min-h-full flex flex-col bg-bg text-fg font-sans">
         <Providers>
           <NavBar />
-          <main className="flex-1 flex flex-col">{children}</main>
+          <main className="flex-1 flex flex-col w-full max-w-3xl mx-auto px-4 pb-28 sm:pb-12">{children}</main>
         </Providers>
       </body>
     </html>

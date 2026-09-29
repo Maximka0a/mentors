@@ -1,3 +1,5 @@
+import { verdictForScore } from "./grading/config";
+
 export type ReviewStatus = "new" | "weak" | "good" | "mastered";
 
 export interface SchedulerInput {
@@ -15,15 +17,17 @@ export interface SchedulerResult {
   dueDate: Date;
 }
 
+// Same thresholds as the AI verdict, so 🟢/🟡/🔴 mean the same thing everywhere
 export function statusForRating(rating: number | null): ReviewStatus {
   if (rating === null) return "new";
-  if (rating <= 5) return "weak";
-  if (rating <= 9) return "good";
-  return "mastered";
+  const verdict = verdictForScore(rating * 10);
+  if (verdict === "green") return "mastered";
+  if (verdict === "yellow") return "good";
+  return "weak";
 }
 
 /**
- * SM-2 adapted to a 0-10 self-rating scale (0-5 = fail/weak, 6-9 = good, 10 = mastered).
+ * SM-2 adapted to a 0-10 rating scale (AI overall score / 10, or the manual buttons).
  */
 export function schedule({ rating, easeFactor, interval, repetitions }: SchedulerInput): SchedulerResult {
   const status = statusForRating(rating);
@@ -46,7 +50,7 @@ export function schedule({ rating, easeFactor, interval, repetitions }: Schedule
   }
 
   if (status === "mastered") {
-    nextInterval = Math.max(nextInterval, 30);
+    nextInterval = Math.max(nextInterval, 14);
   }
 
   const dueDate = new Date();

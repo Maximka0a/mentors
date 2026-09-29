@@ -4,7 +4,18 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  // Migrations need a direct (non-pooled) connection to Neon
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model Pack {
+  id         String     @id @default(cuid())
+  slug       String     @unique
+  name       String
+  order      Int        @default(0)
+  enabled    Boolean    @default(true)
+  categories Category[]
 }
 
 model Category {
@@ -12,17 +23,24 @@ model Category {
   name      String
   slug      String     @unique
   order     Int
+  packId    String
+  pack      Pack       @relation(fields: [packId], references: [id])
   questions Question[]
+
+  @@index([packId])
 }
 
 model Question {
-  id         String       @id @default(cuid())
-  categoryId String
-  category   Category     @relation(fields: [categoryId], references: [id])
-  question   String
-  answer     String
-  order      Int
-  review     ReviewState?
+  id           String         @id @default(cuid())
+  categoryId   String
+  category     Category       @relation(fields: [categoryId], references: [id])
+  question     String
+  answer       String
+  order        Int
+  difficulty   String? // junior | junior+ | middle
+  keyPoints    String[]       @default([])
+  review       ReviewState?
+  gradeAttempts GradeAttempt[]
 
   @@index([categoryId])
 }
@@ -38,4 +56,30 @@ model ReviewState {
   repetitions Int      @default(0)
   dueDate     DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model GradeAttempt {
+  id                String   @id @default(cuid())
+  questionId        String
+  question          Question @relation(fields: [questionId], references: [id])
+  userAnswer        String
+  inputMode         String   @default("text") // text | voice
+  mode              String   @default("study") // study | mock
+  sessionId         String?
+  completenessScore Int
+  correctnessScore  Int
+  formatScore       Int
+  overallScore      Int
+  modelOverall      Int?
+  verdict           String // green | yellow | red
+  missedPoints      String[] @default([])
+  factualErrors     Json     @default("[]")
+  rewordedReference Boolean  @default(false)
+  feedback          String   @default("")
+  model             String
+  createdAt         DateTime @default(now())
+
+  @@index([questionId])
+  @@index([createdAt])
+  @@index([sessionId])
 }

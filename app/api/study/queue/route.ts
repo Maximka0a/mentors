@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { categoryFilter } from "@/lib/topics";
 
 export async function GET(req: NextRequest) {
-  const categorySlug = req.nextUrl.searchParams.get("category");
+  const params = req.nextUrl.searchParams;
 
   const questions = await prisma.question.findMany({
     where: {
       review: { dueDate: { lte: new Date() } },
-      ...(categorySlug ? { category: { slug: categorySlug } } : {}),
+      category: categoryFilter({ pack: params.get("pack"), topic: params.get("topic") }),
     },
-    include: { review: true, category: true },
+    include: { review: true, category: { include: { pack: true } } },
     orderBy: [{ review: { dueDate: "asc" } }],
     take: 50,
   });
@@ -20,6 +21,8 @@ export async function GET(req: NextRequest) {
       question: q.question,
       answer: q.answer,
       category: q.category.name,
+      pack: q.category.pack.name,
+      difficulty: q.difficulty,
       lastRating: q.review?.lastRating ?? null,
     }))
   );

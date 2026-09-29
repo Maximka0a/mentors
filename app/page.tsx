@@ -1,5 +1,5 @@
-import { BoardClient } from "./board-client";
+import { TopicsClient } from "./topics-client";
 
 export default function Home() {
-  return <BoardClient />;
+  return <TopicsClient />;
 }

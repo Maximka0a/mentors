@@ -28,6 +28,13 @@ async function main() {
   const dataPath = path.join(process.cwd(), "prisma", "seed-data.json");
   const categories: SeedCategory[] = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
+  // seed-data.json holds the base (Notion) pack; the extended pack has its own import script
+  const pack = await prisma.pack.upsert({
+    where: { slug: "base" },
+    update: {},
+    create: { id: "pack_base", slug: "base", name: "Базовый банк (Notion)", order: 0 },
+  });
+
   let categoryOrder = 0;
   for (const cat of categories) {
     if (cat.questions.length === 0) continue;
@@ -36,7 +43,7 @@ async function main() {
     const category = await prisma.category.upsert({
       where: { slug },
       update: { name: cat.name, order: categoryOrder },
-      create: { name: cat.name, slug, order: categoryOrder },
+      create: { name: cat.name, slug, order: categoryOrder, packId: pack.id },
     });
     categoryOrder += 1;
 
