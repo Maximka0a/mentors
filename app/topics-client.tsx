@@ -12,6 +12,8 @@ import { Sheet } from "./components/sheet";
 import { PracticeCard } from "./components/practice-card";
 
 const PACK_KEY = "home-pack";
+// Short tab labels that fit a phone screen; the full pack name is shown in the card below
+const PACK_TAB_LABEL: Record<string, string> = { extended: "Топ-100", base: "Базовый банк" };
 
 export function TopicsClient() {
   const queryClient = useQueryClient();
@@ -56,7 +58,7 @@ export function TopicsClient() {
   return (
     <div className="flex flex-col gap-6 pt-6">
       <div className="flex gap-1 overflow-x-auto rounded-xl bg-surface-2 p-1">
-        {packs.map((p) => (
+        {[...packs].sort((a, b) => Number(b.slug === "extended") - Number(a.slug === "extended")).map((p) => (
           <button
             key={p.slug}
             onClick={() => selectPack(p.slug)}
@@ -64,7 +66,7 @@ export function TopicsClient() {
               p.slug === pack.slug ? "bg-surface text-fg shadow-sm" : "text-muted hover:text-fg"
             }`}
           >
-            {p.name}
+            {PACK_TAB_LABEL[p.slug] ?? p.name}
           </button>
         ))}
       </div>
