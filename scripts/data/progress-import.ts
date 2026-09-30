@@ -47,12 +47,12 @@ export const PROGRESS: { id: string; topic: string; status: ImportStatus; note?:
   { id: "ext-architecture-01", topic: "SOLID принципы", status: "red", note: "10/100, D перепутан с Dependency Injection" },
   { id: "ext-architecture-02", topic: "Чистая архитектура (Clean Architecture)", status: "green", note: "80/100, сильная тема" },
   { id: "ext-architecture-03", topic: "MVVM vs MVI", status: "red", note: "0/100, дана теория" },
+  // These four were added to the pack after the first import
+  { id: "ext-android-26", topic: "onRestart место в цепочке", status: "green", note: "закрыто после 5 попыток за 2 дня — стоит перепроверить ещё раз для уверенности" },
+  { id: "ext-coroutines-15", topic: "SharingStarted.Eagerly", status: "red", note: "не смог объяснить дважды (старая копилка)" },
+  { id: "ext-architecture-05", topic: "MVVM vs Clean Architecture — разные уровни", status: "green", note: "было закрыто ранее" },
+  { id: "ext-architecture-06", topic: "Зачем интерфейс репозитория в domain", status: "green", note: "было закрыто ранее" },
 ];
 
 // Entries from the user's list with no matching question in the bank; not imported
-export const UNMATCHED = [
-  "onRestart место в цепочке",
-  "SharingStarted.Eagerly",
-  "MVVM vs Clean Architecture — разные уровни",
-  "Зачем интерфейс репозитория в domain",
-];
+export const UNMATCHED: string[] = [];

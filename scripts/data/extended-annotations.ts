@@ -31,6 +31,7 @@ export const ANNOTATIONS: Record<string, { difficulty: D; keyPoints: string[] }>
   "ext-android-23": { difficulty: "junior+", keyPoints: ["onAttachedToWindow — View прикреплена к окну", "onMeasure → onLayout → onDraw — измерение, размещение, отрисовка", "onDetachedFromWindow — View откреплена, освобождаем ресурсы"] },
   "ext-android-24": { difficulty: "junior", keyPoints: ["Помечает View как требующую перерисовки", "В следующем кадре вызывается onDraw, без перемера и перекладки"] },
   "ext-android-25": { difficulty: "junior+", keyPoints: ["Запрашивает новый проход measure и layout (onMeasure → onLayout)", "Нужен, когда меняется размер или положение View", "Дороже invalidate: запрос поднимается к родителям"] },
+  "ext-android-26": { difficulty: "junior", keyPoints: ["Вызывается, когда остановленная Activity (после onStop) снова становится видимой", "Порядок: onStop → onRestart → onStart → onResume", "При первом запуске не вызывается"] },
 
   // Jetpack
   "ext-jetpack-01": { difficulty: "junior+", keyPoints: ["ViewModel хранится в ViewModelStore владельца (Activity/Fragment)", "При смене конфигурации ViewModelStore переживает пересоздание Activity, поэтому возвращается тот же экземпляр", "onCleared вызывается только при окончательном уничтожении владельца"] },
@@ -90,6 +91,7 @@ export const ANNOTATIONS: Record<string, { difficulty: D; keyPoints: string[] }>
   "ext-coroutines-11": { difficulty: "junior+", keyPoints: ["StateFlow всегда имеет текущее значение и сразу отдаёт его новым подписчикам", "SharedFlow не требует начального значения; по умолчанию replay = 0, но историю можно настроить"] },
   "ext-coroutines-12": { difficulty: "junior+", keyPoints: ["replay — сколько последних значений получит новый подписчик", "extraBufferCapacity — дополнительный буфер сверх replay", "onBufferOverflow — стратегия при переполнении (SUSPEND, DROP_OLDEST, DROP_LATEST)"] },
   "ext-coroutines-13": { difficulty: "junior", keyPoints: ["Передача значений между корутинами (send / receive)", "Безопасное взаимодействие без разделяемого изменяемого состояния"] },
+  "ext-coroutines-15": { difficulty: "middle", keyPoints: ["Это стратегии запуска upstream в stateIn/shareIn", "Eagerly — стартует сразу и работает, пока жив scope, даже без подписчиков", "Lazily — стартует при первом подписчике и не останавливается", "WhileSubscribed — работает, пока есть подписчики, останавливается через таймаут (обычно 5000 мс)"] },
   "ext-coroutines-14": { difficulty: "junior+", keyPoints: ["Rendezvous — без буфера, отправитель ждёт получателя", "Buffered — буфер фиксированного размера", "Conflated — хранит только последнее значение"] },
 
   // Java
@@ -120,6 +122,9 @@ export const ANNOTATIONS: Record<string, { difficulty: D; keyPoints: string[] }>
   "ext-architecture-02": { difficulty: "junior+", keyPoints: ["Слои Presentation, Domain, Data", "Зависимости направлены внутрь, к Domain; Domain не зависит от фреймворка и источников данных", "Цель — тестируемость и независимость бизнес-логики"] },
   "ext-architecture-03": { difficulty: "junior+", keyPoints: ["MVVM — ViewModel отдаёт состояние, View на него подписывается", "MVI — однонаправленный поток: Intent → обработка → единое неизменяемое State как единый источник истины"] },
   "ext-architecture-04": { difficulty: "junior", keyPoints: ["Порождающие — создание объектов (Singleton, Factory Method, Builder)", "Структурные — композиция классов и объектов (Adapter, Decorator, Facade)", "Поведенческие — взаимодействие объектов (Observer, Strategy, Command)"] },
+
+  "ext-architecture-05": { difficulty: "junior+", keyPoints: ["Это решения разного уровня, а не альтернативы", "MVVM — паттерн presentation-слоя (View ↔ ViewModel)", "Чистая архитектура делит всё приложение на слои с зависимостями внутрь, MVVM живёт в её presentation-слое"] },
+  "ext-architecture-06": { difficulty: "junior+", keyPoints: ["Инверсия зависимостей: domain не зависит от data, data реализует интерфейс из domain", "Реализацию можно подменить без изменения бизнес-логики (другой источник, фейк в тестах)", "Domain остаётся чистым Kotlin без фреймворков — легко тестировать"] },
 
   // Алгоритмы
   "ext-algorithms-01": { difficulty: "junior", keyPoints: ["Объём памяти как функция от размера входа (O-нотация)", "Обычно считают дополнительную память: вспомогательные структуры, стек рекурсии"] },

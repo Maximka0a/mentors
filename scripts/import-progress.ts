@@ -8,7 +8,7 @@
  * re-running gives the same result instead of stacking reviews.
  */
 import { schedule } from "../lib/scheduler";
-import { PROGRESS, UNMATCHED, type ImportStatus } from "./data/progress-import";
+import { PROGRESS as ALL_PROGRESS, UNMATCHED, type ImportStatus } from "./data/progress-import";
 import { createScriptClient } from "./db";
 
 // Same ratings as the manual 🔴/🟡/🟢 buttons
@@ -16,6 +16,11 @@ const RATING: Record<ImportStatus, number> = { red: 3, yellow: 6, green: 9 };
 
 async function main() {
   const write = process.argv.includes("--write");
+  // --ids=a,b limits the run to specific questions, so re-running never overwrites
+  // progress made since the first import
+  const idsArg = process.argv.find((a) => a.startsWith("--ids="));
+  const only = idsArg ? new Set(idsArg.slice("--ids=".length).split(",")) : null;
+  const PROGRESS = ALL_PROGRESS.filter((p) => !only || only.has(p.id));
   const prisma = createScriptClient();
   try {
     const questions = await prisma.question.findMany({

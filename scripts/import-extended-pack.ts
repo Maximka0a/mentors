@@ -13,7 +13,7 @@ import { ANNOTATIONS } from "./data/extended-annotations";
 import { createScriptClient } from "./db";
 
 const SOURCE = path.join(process.cwd(), "scripts", "data", "extended-100.txt");
-const PACK = { slug: "extended", name: "100 вопросов — расширенный банк", order: 1 };
+const PACK = { slug: "extended", name: "Топ-100 — расширенный банк", order: 1 };
 
 const TOPICS: { name: string; slug: string }[] = [
   { name: "Android", slug: "android" },
