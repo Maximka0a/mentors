@@ -7,7 +7,7 @@ import type { StudyQuestion } from "../types";
 import { getJson } from "../components/api-client";
 import { PracticeCard, type PracticeOutcome } from "../components/practice-card";
 import { HistoryBar, type HistoryEntry } from "../components/history-bar";
-import { ScopePicker, scopeQuery, type Scope } from "../components/scope-picker";
+import { DEFAULT_PACK, ScopePicker, scopeQuery, type Scope } from "../components/scope-picker";
 
 const HISTORY_LIMIT = 10;
 
@@ -32,7 +32,7 @@ export function StudyClient() {
 }
 
 function Setup({ onStart }: { onStart: (s: Scope) => void }) {
-  const [scope, setScope] = useState<Scope>({ pack: null, topic: null });
+  const [scope, setScope] = useState<Scope>({ pack: DEFAULT_PACK, topic: null });
   return (
     <div className="flex flex-col gap-6 pt-6">
       <div>

@@ -9,7 +9,7 @@ import { getJson, gradeAnswer, submitReview } from "../components/api-client";
 import { AnswerInput } from "../components/answer-input";
 import { GradeView } from "../components/grade-view";
 import { Markdown } from "../components/markdown";
-import { ScopePicker, scopeQuery, type Scope } from "../components/scope-picker";
+import { DEFAULT_PACK, ScopePicker, scopeQuery, type Scope } from "../components/scope-picker";
 import { verdictForScore } from "@/lib/grading/config";
 
 type Phase = "setup" | "interview" | "results";
@@ -31,7 +31,7 @@ const RATE_LIMIT_DELAY_MS = 20_000;
 
 export default function MockPage() {
   const [phase, setPhase] = useState<Phase>("setup");
-  const [scope, setScope] = useState<Scope>({ pack: null, topic: null });
+  const [scope, setScope] = useState<Scope>({ pack: DEFAULT_PACK, topic: null });
   const [count, setCount] = useState(10);
   const [questions, setQuestions] = useState<StudyQuestion[]>([]);
   const [records, setRecords] = useState<AnswerRecord[]>([]);

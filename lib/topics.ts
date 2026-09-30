@@ -11,8 +11,11 @@ export function subtopicOf(categoryName: string): string | null {
   return i === -1 ? null : categoryName.slice(i + 3);
 }
 
+// Packs are never mixed in one session; without an explicit pack we use the extended one
+export const DEFAULT_PACK_SLUG = "extended";
+
 export function categoryFilter(opts: { pack?: string | null; topic?: string | null }): Prisma.CategoryWhereInput {
-  const where: Prisma.CategoryWhereInput = opts.pack ? { pack: { slug: opts.pack } } : { pack: { enabled: true } };
+  const where: Prisma.CategoryWhereInput = { pack: { slug: opts.pack || DEFAULT_PACK_SLUG } };
   if (opts.topic) {
     where.OR = [{ name: opts.topic }, { name: { startsWith: `${opts.topic} > ` } }];
   }

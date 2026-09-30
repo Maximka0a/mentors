@@ -4,8 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import type { PackTopics } from "../types";
 import { getJson } from "./api-client";
 
+// Packs are never mixed: a session always runs inside exactly one pack
+export const DEFAULT_PACK = "extended";
+
 export interface Scope {
-  pack: string | null; // null = all enabled packs
+  pack: string | null;
   topic: string | null; // null = all topics
 }
 
@@ -20,9 +23,6 @@ export function ScopePicker({ value, onChange }: { value: Scope; onChange: (s: S
       <div>
         <p className="mb-2 text-sm text-muted">Пак</p>
         <div className="flex flex-wrap gap-2">
-          <Chip active={value.pack === null} onClick={() => onChange({ pack: null, topic: null })}>
-            Все включённые
-          </Chip>
           {enabledPacks.map((p) => (
             <Chip key={p.slug} active={value.pack === p.slug} onClick={() => onChange({ pack: p.slug, topic: null })}>
               {p.name}

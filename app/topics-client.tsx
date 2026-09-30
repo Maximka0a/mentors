@@ -35,7 +35,7 @@ export function TopicsClient() {
   if (isLoading) return <p className="py-16 text-center text-muted">Загрузка…</p>;
   if (error || !packs) return <p className="py-16 text-center text-status-red">Не удалось загрузить темы</p>;
 
-  const pack = packs.find((p) => p.slug === packSlug) ?? packs[0];
+  const pack = packs.find((p) => p.slug === packSlug) ?? packs.find((p) => p.slug === "extended") ?? packs[0];
   const totals = pack.topics.reduce(
     (acc, t) => ({
       total: acc.total + t.total,
